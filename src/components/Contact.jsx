@@ -1,6 +1,16 @@
 // src/components/Contact.jsx
 import { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
+import emailjs from '@emailjs/browser';
+
+// ⬇️ Remplace ces 3 valeurs par les tiennes sur emailjs.com
+const EMAILJS_SERVICE_ID  = 'service_hac9ucv';
+const EMAILJS_TEMPLATE_ID = 'template_7ns51oc';
+const EMAILJS_PUBLIC_KEY  = 'nf-SuQ4_H8NmaK-kc';
+
+// Google Maps embed — pointe exactement sur "Essongué Rico", Port-Gentil
+const GOOGLE_MAPS_EMBED =
+  'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d498.6884453164797!2d8.7851236!3d-0.7151134!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a83b7c75e4d5a87%3A0xae8f72abfee082a7!2sEssongu%C3%A9%20rico!5e0!3m2!1sfr!2sga!4v1727613918419!5m2!1sfr!2sga';
 
 const infos = [
   {
@@ -33,15 +43,38 @@ export default function Contact() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handle = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const submit = async e => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
-    setLoading(false);
-    setSent(true);
+    setError('');
+
+    const templateParams = {
+      from_name:    form.name,
+      from_email:   form.email,
+      from_phone:   form.phone || 'Non renseigné',
+      subject:      form.subject,
+      message:      form.message,
+      to_email:     'ecis23gabon@gmail.com',
+    };
+
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+      setSent(true);
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      setError("Une erreur s'est produite. Veuillez réessayer ou nous contacter directement.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputStyle = {
@@ -100,16 +133,18 @@ export default function Contact() {
           display: 'grid', gridTemplateColumns: '1fr 1fr',
           gap: '32px',
         }} className="contact-grid">
-          {/* Map — centré sur Essongué Rigo, Port-Gentil */}
+
+          {/* ✅ Google Maps — même embed que l'ancien site, pointe sur Essongué Rico */}
           <div style={{ borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow)', minHeight: '420px' }}>
             <iframe
-              title="E.C.I.S Services - Essongué Rigo, Port-Gentil"
+              title="E.C.I.S Services — Essongué Rico, Port-Gentil"
+              src={GOOGLE_MAPS_EMBED}
               width="100%"
               height="100%"
               style={{ border: 0, minHeight: '420px', display: 'block' }}
-              loading="lazy"
               allowFullScreen
-              src="https://www.openstreetmap.org/export/embed.html?bbox=8.7720%2C-0.7290%2C8.7820%2C-0.7190&layer=mapnik&marker=-0.7240%2C8.7770"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
 
@@ -126,7 +161,8 @@ export default function Contact() {
                   fontSize: '1.8rem', color: 'var(--navy)', marginBottom: '10px',
                 }}>Message envoyé !</h3>
                 <p style={{ color: 'var(--text-secondary)' }}>Nous vous répondrons dans les plus brefs délais.</p>
-                <button onClick={() => setSent(false)} className="btn-primary" style={{ marginTop: '24px' }}>
+                <button onClick={() => { setSent(false); setForm({ name: '', email: '', phone: '', subject: '', message: '' }); }}
+                  className="btn-primary" style={{ marginTop: '24px' }}>
                   Nouveau message
                 </button>
               </div>
@@ -136,6 +172,17 @@ export default function Contact() {
                   fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800,
                   fontSize: '1.6rem', color: 'var(--navy)', marginBottom: '24px',
                 }}>Envoyez-nous un message</h3>
+
+                {error && (
+                  <div style={{
+                    background: '#fff0f0', border: '1px solid #ffcccc', borderRadius: '8px',
+                    padding: '12px 16px', marginBottom: '20px',
+                    color: '#c0392b', fontSize: '14px',
+                  }}>
+                    {error}
+                  </div>
+                )}
+
                 <form onSubmit={submit}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
                     <div>

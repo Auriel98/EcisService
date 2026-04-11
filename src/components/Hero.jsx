@@ -21,10 +21,10 @@ export default function Hero() {
       overflow: 'hidden',
     }}>
 
-      {/* Overlay sombre pour lisibilité du texte */}
+      {/* Overlay — opacité réduite pour laisser voir l'image */}
       <div style={{
         position: 'absolute', inset: 0,
-        background: 'linear-gradient(135deg, rgba(8,15,26,0.92) 0%, rgba(13,27,46,0.85) 40%, rgba(19,34,64,0.75) 70%, rgba(13,27,46,0.85) 100%)',
+        background: 'linear-gradient(135deg, rgba(8,15,26,0.82) 0%, rgba(13,27,46,0.75) 40%, rgba(19,34,64,0.62) 70%, rgba(13,27,46,0.75) 100%)',
       }} />
 
       {/* Grid pattern */}
