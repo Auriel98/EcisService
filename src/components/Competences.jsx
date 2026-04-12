@@ -1,18 +1,13 @@
 // src/components/Competences.jsx
-import { Activity, Zap, Wrench, ChevronRight, SlidersHorizontal } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
-
-const AUTOPLAY_DURATION = 5000;
+import { Activity, Zap, Wrench, SlidersHorizontal, ChevronDown, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
 
 const tabs = [
   {
     id: 'instrumentation',
     icon: Activity,
     title: 'Instrumentation & Automatismes',
-    shortTitle: 'Instrumentation',
-    subtitle: '& Automatismes',
     color: '#1a6fc4',
-    desc: "Nos experts en instrumentation et automatismes assurent la maintenance, la programmation et l'optimisation des systèmes de contrôle.",
     items: [
       'Maintenance préventive et curative',
       "Programmation et configuration de systèmes et automates",
@@ -26,10 +21,7 @@ const tabs = [
     id: 'electricite',
     icon: Zap,
     title: 'Électricité Industrielle',
-    shortTitle: 'Électricité',
-    subtitle: 'Industrielle',
     color: '#e8a820',
-    desc: 'Nous concevons, installons et entretenons vos infrastructures électriques industrielles avec fiabilité et sécurité.',
     items: [
       'Conception et maintenance des schémas électriques',
       'Maintenance des sous-stations électriques et groupes électrogènes',
@@ -41,10 +33,7 @@ const tabs = [
     id: 'chaudronnerie',
     icon: Wrench,
     title: 'Chaudronnerie & Tuyauterie',
-    shortTitle: 'Chaudronnerie',
-    subtitle: '& Tuyauterie',
     color: '#2589e8',
-    desc: 'Nous supervisons et réalisons des projets de chaudronnerie et tuyauterie, assurant la qualité des travaux de conception et de maintenance.',
     items: [
       'Supervision et réalisation de travaux en chaudronnerie et tuyauterie',
       'Mise à jour des P&ID/PCF',
@@ -55,10 +44,7 @@ const tabs = [
     id: 'etalonnage',
     icon: SlidersHorizontal,
     title: 'Étalonnage & Calibrage',
-    shortTitle: 'Étalonnage',
-    subtitle: '& Calibrage',
     color: '#1a6fc4',
-    desc: "Nous assurons le reconditionnement, l'étalonnage et le calibrage de vos équipements pneumatiques et convertisseurs pour garantir leur fiabilité et leur conformité aux normes industrielles.",
     items: [
       'Reconditionnement vanne pneumatique : démontage, remplacement des pièces usées et remontage selon les normes constructeur',
       "Tests de performance et d'étanchéité après reconditionnement",
@@ -71,52 +57,12 @@ const tabs = [
 ];
 
 export default function Competences() {
-  const [active, setActive] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const intervalRef = useRef(null);
-  const progressRef = useRef(null);
-  const startTimeRef = useRef(null);
+  const [openId, setOpenId] = useState('instrumentation');
 
-  const current = tabs[active];
-
-  const goTo = (index) => {
-    setActive(index);
-    setProgress(0);
-    startTimeRef.current = Date.now();
-  };
-
-  useEffect(() => {
-    if (paused) return;
-
-    startTimeRef.current = Date.now();
-
-    progressRef.current = setInterval(() => {
-      const elapsed = Date.now() - startTimeRef.current;
-      const pct = Math.min((elapsed / AUTOPLAY_DURATION) * 100, 100);
-      setProgress(pct);
-    }, 30);
-
-    intervalRef.current = setTimeout(() => {
-      setActive(i => (i + 1) % tabs.length);
-      setProgress(0);
-      startTimeRef.current = Date.now();
-    }, AUTOPLAY_DURATION);
-
-    return () => {
-      clearInterval(progressRef.current);
-      clearTimeout(intervalRef.current);
-    };
-  }, [active, paused]);
+  const toggle = (id) => setOpenId(prev => (prev === id ? null : id));
 
   return (
-    <section
-      id="competences"
-      className="section"
-      style={{ background: '#fff' }}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => { setPaused(false); startTimeRef.current = Date.now(); }}
-    >
+    <section id="competences" className="section" style={{ background: '#fff' }}>
       <div className="container">
         <div style={{ textAlign: 'center', marginBottom: '56px' }}>
           <span className="section-label">Domaines de compétence</span>
@@ -126,138 +72,148 @@ export default function Competences() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '24px', alignItems: 'start' }} className="comp-grid">
+        <div style={{
+          border: '1px solid rgba(13,27,46,0.09)',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          boxShadow: '0 2px 16px rgba(13,27,46,0.06)',
+        }}>
+          {tabs.map((tab, index) => {
+            const Icon = tab.icon;
+            const isOpen = openId === tab.id;
+            const isLast = index === tabs.length - 1;
 
-          {/* Sidebar tabs */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {tabs.map((tab, i) => {
-              const Icon = tab.icon;
-              const isActive = active === i;
-              return (
+            return (
+              <div
+                key={tab.id}
+                style={{
+                  borderBottom: isLast ? 'none' : '1px solid rgba(13,27,46,0.08)',
+                  background: isOpen ? `${tab.color}05` : '#fff',
+                  transition: 'background 0.25s',
+                }}
+              >
+                {/* Header */}
                 <button
-                  key={tab.id}
-                  onClick={() => goTo(i)}
+                  onClick={() => toggle(tab.id)}
                   style={{
-                    display: 'flex', alignItems: 'center', gap: '14px',
-                    padding: '14px 16px',
-                    borderRadius: '12px',
-                    border: isActive ? `2px solid ${tab.color}` : '1px solid rgba(13,27,46,0.08)',
-                    background: isActive ? `${tab.color}08` : '#fff',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '18px',
+                    padding: '22px 28px',
+                    background: 'transparent',
+                    border: 'none',
                     cursor: 'pointer',
                     textAlign: 'left',
-                    transition: 'all 0.25s',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    width: '100%',
                   }}
                 >
-                  {/* Barre de progression en bas */}
-                  {isActive && (
-                    <div style={{
-                      position: 'absolute', bottom: 0, left: 0,
-                      height: '3px', background: tab.color,
-                      width: `${progress}%`,
-                      transition: 'width 0.03s linear',
-                      borderRadius: '0 2px 0 0',
-                    }} />
-                  )}
-
                   <div style={{
-                    width: '36px', height: '36px', borderRadius: '8px', flexShrink: 0,
-                    background: isActive ? `${tab.color}18` : 'rgba(13,27,46,0.05)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    transition: 'background 0.25s',
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '11px',
+                    flexShrink: 0,
+                    background: isOpen ? `${tab.color}18` : 'rgba(13,27,46,0.05)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}>
-                    <Icon size={18} color={isActive ? tab.color : '#888'} />
+                    <Icon size={20} color={isOpen ? tab.color : '#888'} />
                   </div>
 
-                  <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ flex: 1 }}>
                     <p style={{
-                      margin: 0, fontFamily: 'Barlow Condensed, sans-serif',
-                      fontWeight: 700, fontSize: '14px', lineHeight: 1.2,
-                      color: isActive ? tab.color : 'var(--navy)',
-                      transition: 'color 0.25s',
+                      margin: 0,
+                      fontWeight: 800,
+                      fontSize: '1.15rem',
+                      color: isOpen ? tab.color : 'var(--navy)',
                     }}>
-                      {tab.shortTitle}
+                      {tab.title}
                     </p>
                     <p style={{
-                      margin: 0, fontSize: '12px',
-                      color: isActive ? tab.color : 'var(--text-secondary)',
-                      opacity: isActive ? 0.75 : 1,
+                      margin: '3px 0 0',
+                      fontSize: '12px',
+                      color: isOpen ? `${tab.color}99` : 'var(--text-secondary)',
                     }}>
-                      {tab.subtitle}
+                      {tab.items.length} prestation{tab.items.length > 1 ? 's' : ''} · {isOpen ? 'Cliquez pour réduire' : 'Cliquez pour voir'}
                     </p>
                   </div>
 
-                  {isActive && (
-                    <div style={{
-                      width: '7px', height: '7px', borderRadius: '50%',
-                      background: tab.color, flexShrink: 0,
-                    }} />
-                  )}
+                  <ChevronDown
+                    size={18}
+                    style={{
+                      transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: '0.3s',
+                    }}
+                  />
                 </button>
-              );
-            })}
 
-            <p style={{
-              fontSize: '11px', color: 'var(--text-secondary)', textAlign: 'center',
-              margin: '6px 0 0', letterSpacing: '0.3px', opacity: 0.7,
-            }}>
-              Défilement auto · Cliquez pour explorer
-            </p>
-          </div>
-
-          {/* Contenu */}
-          <div style={{
-            background: 'var(--gray-light)', borderRadius: '20px',
-            padding: '40px', transition: 'all 0.3s',
-          }}>
-            <div style={{
-              width: '60px', height: '60px', borderRadius: '14px',
-              background: `${current.color}15`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              marginBottom: '20px',
-            }}>
-              <current.icon size={28} color={current.color} />
-            </div>
-
-            <h3 style={{
-              fontFamily: 'Barlow Condensed, sans-serif',
-              fontSize: '1.8rem', fontWeight: 800,
-              color: 'var(--navy)', marginBottom: '12px',
-            }}>
-              {current.title}
-            </h3>
-
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '28px' }}>
-              {current.desc}
-            </p>
-
-            <div style={{ marginBottom: '28px' }}>
-              {current.items.map(item => (
-                <div key={item} style={{
-                  display: 'flex', gap: '12px', alignItems: 'flex-start',
-                  padding: '12px 0',
-                  borderBottom: '1px solid rgba(13,27,46,0.07)',
+                {/* Contenu */}
+                <div style={{
+                  maxHeight: isOpen ? '600px' : '0',
+                  overflow: 'hidden',
+                  transition: 'max-height 0.4s ease',
                 }}>
-                  <ChevronRight size={18} color={current.color} style={{ flexShrink: 0, marginTop: '1px' }} />
-                  <span style={{ color: 'var(--text-secondary)', fontSize: '15px', lineHeight: 1.5 }}>
-                    {item}
-                  </span>
-                </div>
-              ))}
-            </div>
+                  <div
+                    className="accord-items"
+                    style={{
+                      padding: '0 28px 28px',
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(2, 1fr)',
+                      gap: '4px 32px',
+                    }}
+                  >
+                    {tab.items.map((item, i) => (
+                      <div key={i} style={{
+                        display: 'flex',
+                        gap: '10px',
+                        padding: '10px 0',
+                        borderBottom: '1px solid rgba(13,27,46,0.06)',
+                      }}>
+                        <div style={{
+                          width: '5px',
+                          height: '5px',
+                          borderRadius: '50%',
+                          background: tab.color,
+                          marginTop: '7px',
+                        }} />
+                        <span style={{ fontSize: '13px' }}>{item}</span>
+                      </div>
+                    ))}
+                  </div>
 
-            <a href="#contact" className="btn-primary" style={{ background: current.color }}>
-              Demander un devis
-            </a>
-          </div>
+                  {/* ✅ BOUTON CORRIGÉ */}
+                  <div style={{ padding: '0 28px 28px' }}>
+                    <a
+                      href="#contact"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '10px 20px',
+                        borderRadius: '8px',
+                        background: tab.color,
+                        color: '#fff',
+                        fontWeight: 700,
+                        fontSize: '13px',
+                        textTransform: 'uppercase',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      Demander un devis <ArrowRight size={14} />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
       <style>{`
-        @media (max-width: 768px) {
-          .comp-grid { grid-template-columns: 1fr !important; }
+        @media (max-width: 600px) {
+          .accord-items {
+            grid-template-columns: 1fr !important;
+          }
         }
       `}</style>
     </section>
