@@ -1,5 +1,5 @@
 // src/components/Projets.jsx
-import { Building2, MapPin, ArrowUpRight } from 'lucide-react';
+import { Building2, MapPin, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 
 const projets = [
   {
@@ -32,6 +32,24 @@ const projets = [
     letter: 'P',
     logo: '/images/perenco.png',
   },
+  {
+    client: 'Total Energies EP Gabon',
+    sector: 'Pétrole & Gaz',
+    location: 'Gabon',
+    prestations: [
+      'Installation du chromatographe',
+      'Revamping centrale de détection incendie (MER)',
+      'Installation des gyrophares',
+      'Raccordement gyrophare SDC AGM (AIGUI)',
+      'Installation des gyrophares avertisseurs POG-OM-AGM',
+      "Installation de l'analyseur de gaz ABB sur PG2-CE WARTSILA",
+      'Installation de deux passerelles réseau sur le MAT',
+    ],
+    services: ['Instrumentation', 'Détection Incendie', 'Analyse de Gaz', 'Réseau'],
+    color: '#e63b2e',
+    letter: 'T',
+    logo: '/images/total_energies.png',
+  },
 ];
 
 export default function Projets() {
@@ -46,17 +64,25 @@ export default function Projets() {
           </p>
         </div>
 
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '28px',
-        }} className="projets-grid">
-          {projets.map(({ client, sector, location, description, services, color, letter, logo }) => (
-            <div key={client} style={{
-              background: '#fff', borderRadius: '16px',
-              overflow: 'hidden', boxShadow: '0 2px 16px rgba(13,27,46,0.07)',
-              border: '1px solid rgba(13,27,46,0.06)',
-              transition: 'transform 0.3s, box-shadow 0.3s',
-            }}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: '28px',
+          }}
+          className="projets-grid"
+        >
+          {projets.map(({ client, sector, location, description, prestations, services, color, letter, logo }) => (
+            <div
+              key={client}
+              style={{
+                background: '#fff',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: '0 2px 16px rgba(13,27,46,0.07)',
+                border: '1px solid rgba(13,27,46,0.06)',
+                transition: 'transform 0.3s, box-shadow 0.3s',
+              }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'translateY(-5px)';
                 e.currentTarget.style.boxShadow = '0 16px 48px rgba(13,27,46,0.14)';
@@ -67,19 +93,26 @@ export default function Projets() {
               }}
             >
               {/* Card header */}
-              <div style={{
-                background: `linear-gradient(135deg, ${color}22, ${color}08)`,
-                borderBottom: `3px solid ${color}`,
-                padding: '28px',
-                display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-              }}>
+              <div
+                style={{
+                  background: `linear-gradient(135deg, ${color}22, ${color}08)`,
+                  borderBottom: `3px solid ${color}`,
+                  padding: '28px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                }}
+              >
                 <div style={{ flex: 1 }}>
-                  {/* Logo avec fallback sur la lettre */}
-                  <div style={{
-                    width: '80px', height: '44px',
-                    marginBottom: '12px',
-                    display: 'flex', alignItems: 'center',
-                  }}>
+                  <div
+                    style={{
+                      width: '80px',
+                      height: '44px',
+                      marginBottom: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
                     <img
                       src={logo}
                       alt={`Logo ${client}`}
@@ -90,63 +123,142 @@ export default function Projets() {
                         objectPosition: 'left center',
                       }}
                       onError={e => {
-                        // Fallback : cache l'img et affiche la div lettre
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.nextSibling.style.display = 'flex';
                       }}
                     />
-                    {/* Fallback lettre (caché par défaut) */}
-                    <div style={{
-                      display: 'none',
-                      width: '52px', height: '52px', borderRadius: '12px',
-                      background: color, alignItems: 'center', justifyContent: 'center',
-                      fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 800,
-                      fontSize: '22px', color: '#fff',
-                    }}>{letter}</div>
+                    <div
+                      style={{
+                        display: 'none',
+                        width: '52px',
+                        height: '52px',
+                        borderRadius: '12px',
+                        background: color,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: 'Barlow Condensed, sans-serif',
+                        fontWeight: 800,
+                        fontSize: '22px',
+                        color: '#fff',
+                      }}
+                    >
+                      {letter}
+                    </div>
                   </div>
 
-                  <h3 style={{
-                    fontFamily: 'Barlow Condensed, sans-serif',
-                    fontWeight: 800, fontSize: '1.4rem', color: 'var(--navy)',
-                  }}>{client}</h3>
+                  <h3
+                    style={{
+                      fontFamily: 'Barlow Condensed, sans-serif',
+                      fontWeight: 800,
+                      fontSize: '1.4rem',
+                      color: 'var(--navy)',
+                    }}
+                  >
+                    {client}
+                  </h3>
                   <div style={{ display: 'flex', gap: '16px', marginTop: '6px' }}>
-                    <span style={{
-                      fontSize: '12px', color: 'var(--text-secondary)',
-                      display: 'flex', alignItems: 'center', gap: '4px',
-                    }}>
-                      <Building2 size={12} />{sector}
+                    <span
+                      style={{
+                        fontSize: '12px',
+                        color: 'var(--text-secondary)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      <Building2 size={12} />
+                      {sector}
                     </span>
-                    <span style={{
-                      fontSize: '12px', color: 'var(--text-secondary)',
-                      display: 'flex', alignItems: 'center', gap: '4px',
-                    }}>
-                      <MapPin size={12} />{location}
+                    <span
+                      style={{
+                        fontSize: '12px',
+                        color: 'var(--text-secondary)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      <MapPin size={12} />
+                      {location}
                     </span>
                   </div>
                 </div>
-                <div style={{
-                  width: '36px', height: '36px', borderRadius: '8px',
-                  background: `${color}15`, border: `1px solid ${color}30`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  flexShrink: 0, marginLeft: '12px',
-                }}>
+
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '8px',
+                    background: `${color}15`,
+                    border: `1px solid ${color}30`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    marginLeft: '12px',
+                  }}
+                >
                   <ArrowUpRight size={18} color={color} />
                 </div>
               </div>
 
               {/* Card body */}
               <div style={{ padding: '24px 28px' }}>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7, marginBottom: '20px' }}>
-                  {description}
-                </p>
+                {prestations ? (
+                  <ul style={{ margin: '0 0 20px 0', padding: 0, listStyle: 'none' }}>
+                    {prestations.map((p, i) => (
+                      <li
+                        key={i}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '8px',
+                          fontSize: '13px',
+                          color: 'var(--text-secondary)',
+                          lineHeight: 1.5,
+                          marginBottom: '6px',
+                        }}
+                      >
+                        <CheckCircle2
+                          size={14}
+                          color={color}
+                          style={{ marginTop: '2px', flexShrink: 0 }}
+                        />
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p
+                    style={{
+                      color: 'var(--text-secondary)',
+                      fontSize: '14px',
+                      lineHeight: 1.7,
+                      marginBottom: '20px',
+                    }}
+                  >
+                    {description}
+                  </p>
+                )}
+
                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {services.map(s => (
-                    <span key={s} style={{
-                      padding: '4px 12px', borderRadius: '100px',
-                      background: `${color}12`, border: `1px solid ${color}25`,
-                      fontSize: '12px', fontWeight: 600, color: color,
-                      fontFamily: 'Barlow Condensed, sans-serif', letterSpacing: '0.3px',
-                    }}>{s}</span>
+                    <span
+                      key={s}
+                      style={{
+                        padding: '4px 12px',
+                        borderRadius: '100px',
+                        background: `${color}12`,
+                        border: `1px solid ${color}25`,
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        color: color,
+                        fontFamily: 'Barlow Condensed, sans-serif',
+                        letterSpacing: '0.3px',
+                      }}
+                    >
+                      {s}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -156,11 +268,8 @@ export default function Projets() {
       </div>
 
       <style>{`
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
           .projets-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (min-width: 601px) and (max-width: 900px) {
-          .projets-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
       `}</style>
     </section>
