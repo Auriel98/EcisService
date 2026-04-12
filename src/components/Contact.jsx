@@ -34,7 +34,7 @@ const infos = [
   {
     icon: Phone,
     title: 'Téléphone',
-    lines: ['+241 77 669 292', '+241 65 039 980'],
+    lines: ['+241 65 685 283', '+241 77 322 900'],
     color: '#1a6fc4',
   },
 ];

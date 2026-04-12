@@ -105,8 +105,8 @@ export default function Footer() {
               Lun–Ven : 09h–17h<br />
               Sam : 10h–16h<br /><br />
               ecis23gabon@gmail.com<br />
-              +241 77 669 292<br />
-              +241 65 039 980
+              +241 65 685 283<br />
+              +241 77 322 900
             </p>
           </div>
         </div>
