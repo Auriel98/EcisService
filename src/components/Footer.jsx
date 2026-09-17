@@ -100,7 +100,7 @@ export default function Footer() {
               Informations
             </h4>
             <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '13px', lineHeight: 1.8 }}>
-              Centre Commercial Essongué Rigo<br />
+              Cité Shell<br />
               Port-Gentil, Gabon — BP 931<br /><br />
               Lun–Ven : 09h–17h<br />
               Sam : 10h–16h<br /><br />
