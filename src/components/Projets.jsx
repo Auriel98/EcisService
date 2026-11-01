@@ -1,5 +1,6 @@
 // src/components/Projets.jsx
 import { Building2, MapPin, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import RealisationRecente from './RealisationRecente';
 
 const projets = [
   {
@@ -265,6 +266,9 @@ export default function Projets() {
             </div>
           ))}
         </div>
+
+        {/* Activité récente */}
+        <RealisationRecente />
       </div>
 
       <style>{`
